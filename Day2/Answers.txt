@@ -1,0 +1,219 @@
+
+1]Display the name of all employees whose salary is in between 500 
+and 1300
+->
+mysql> select ename,salary from emp where salary between 500 and 1300;
++-------+--------+
+| ename | salary |
++-------+--------+
+| a     |   1000 |
+| b     |   1023 |
+| h     |    523 |
+| j     |    627 |
+| k     |    978 |
+| m     |    746 |
+| p     |    821 |
+| r     |    546 |
+| s     |    717 |
+| t     |    817 |
+| u     |    888 |
+| a3    |    653 |
+| a8    |    845 |
+| b1    |   1212 |
+| b2    |   1242 |
+| b5    |    555 |
++-------+--------+
+16 rows in set (0.00 sec)
+
+_______________________________________________________________________
+
+2]Display name of all employees who are in the HR department
+mysql> select ename,deptname from emp join dept where deptname='HR';
++-------+----------+
+| ename | deptname |
++-------+----------+
+| a     | HR       |
+| b     | HR       |
+| c     | HR       |
+| d     | HR       |
+| e     | HR       |
+| f     | HR       |
+| g     | HR       |
+| h     | HR       |
+| i     | HR       |
+| j     | HR       |
+| k     | HR       |
+| l     | HR       |
+| m     | HR       |
+| n     | HR       |
+| o     | HR       |
+| p     | HR       |
+| q     | HR       |
+| r     | HR       |
+| s     | HR       |
+| t     | HR       |
+| u     | HR       |
+| v     | HR       |
+| w     | HR       |
+| x     | HR       |
+| y     | HR       |
+| z     | HR       |
+| a1    | HR       |
+| a2    | HR       |
+| a3    | HR       |
+| a4    | HR       |
+| a5    | HR       |
+| a6    | HR       |
+| a7    | HR       |
+| a8    | HR       |
+| a9    | HR       |
+| b1    | HR       |
+| b2    | HR       |
+| b3    | HR       |
+| b4    | HR       |
+| b5    | HR       |
+| b6    | HR       |
+| b7    | HR       |
+| b8    | HR       |
+| b9    | HR       |
+| c1    | HR       |
++-------+----------+
+45 rows in set (0.09 sec)
+
+___________________________________________________________________
+
+3]Display name of all the dept and count all the employees
+in that dept
+
+
+mysql> select deptname,count(eid) as Number_of_Employees from emp join dept  on emp.deptid=dept.deptid group by deptname;
++----------+---------------------+
+| deptname | Number_of_Employees |
++----------+---------------------+
+| HR       |                  21 |
+| IT       |                  10 |
+| Finance  |                  14 |
++----------+---------------------+
+3 rows in set (0.00 sec)
+
+______________________________________________________________
+
+
+4]Display name,deptname and salary of the employee 
+whose salary is highest
+
+mysql> select ename,deptname,salary from emp join dept order by salary desc limit 1;
++-------+----------+--------+
+| ename | deptname | salary |
++-------+----------+--------+
+| x     | HR       |  28222 |
++-------+----------+--------+
+1 row in set (0.06 sec)
+
+_________________________________________________________________
+
+5]Display name,deptname and salary of the employee 
+whose salary is lowest
+
+mysql> select ename,deptname,salary from emp join dept order by salary  limit 1;
++-------+----------+--------+
+| ename | deptname | salary |
++-------+----------+--------+
+| a5    | HR       |      3 |
++-------+----------+--------+
+1 row in set (0.06 sec)
+
+____________________________________________________________________
+
+6]Display name ,deptname of employee whose salary is 
+second highest
+
+
+mysql> select ename,deptname,salary from emp join dept order by salary desc limit 1 offset 1;
++-------+----------+--------+
+| ename | deptname | salary |
++-------+----------+--------+
+| x     | IT       |  28222 |
++-------+----------+--------+
+1 row in set (0.00 sec)
+
+________________________________________________________________
+
+7]Display name,deptname of top 5 earning employees
+
+
+mysql> select ename,deptname,salary from emp join dept order by salary desc limit 5;
++-------+----------+--------+
+| ename | deptname | salary |
++-------+----------+--------+
+| x     | HR       |  28222 |
+| x     | IT       |  28222 |
+| x     | Finance  |  28222 |
+| w     | IT       |  20001 |
+| w     | Finance  |  20001 |
++-------+----------+--------+
+5 rows in set (0.14 sec)
+
+______________________________________________________________
+
+8]Display the deptname,name of top 5 earning employees
+from each department
+
+
+mysql> (select ename,deptname,salary from emp join dept on emp.deptid=dept.deptid where deptname='IT' order by salary desc limit 5)
+    -> UNION
+    -> (select ename,deptname,salary from emp join dept on emp.deptid=dept.deptid where deptname='HR' order by salary desc limit 5)
+    -> UNION
+    -> (select ename,deptname,salary from emp join dept on emp.deptid=dept.deptid where deptname='Finance' order by salary desc limit 5)
+    -> ;
++-------+----------+--------+
+| ename | deptname | salary |
++-------+----------+--------+
+| b8    | IT       |   4532 |
+| b3    | IT       |   4212 |
+| c1    | IT       |   2324 |
+| b2    | IT       |   1242 |
+| b     | IT       |   1023 |
+| x     | HR       |  28222 |
+| z     | HR       |  12111 |
+| a2    | HR       |   9238 |
+| v     | HR       |   9029 |
+| b7    | HR       |   6432 |
+| w     | Finance  |  20001 |
+| y     | Finance  |  19212 |
+| b4    | Finance  |   4444 |
+| f     | Finance  |   2023 |
+| o     | Finance  |   1999 |
++-------+----------+--------+
+15 rows in set (0.00 sec)
+
+
+_________________________________________________________
+
+9]Display average salary of each department
+
+
+mysql> select deptname,avg(salary) as Average_salary from emp join dept on emp.deptid=dept.deptid group by deptname;
++----------+----------------+
+| deptname | Average_salary |
++----------+----------------+
+| HR       |      3855.8571 |
+| IT       |      1540.7000 |
+| Finance  |      3814.2143 |
++----------+----------------+
+3 rows in set (0.05 sec)
+
+_________________________________________________________
+
+10]Display min and max salary of each of the department
+
+mysql> select deptname,min(salary) as Minimum_Salary ,max(salary) as Minimum_salary from emp join dept on emp.deptid=dept.deptid  group by deptname;
++----------+----------------+----------------+
+| deptname | Minimum_Salary | Minimum_salary |
++----------+----------------+----------------+
+| HR       |             16 |          28222 |
+| IT       |              3 |           4532 |
+| Finance  |             23 |          20001 |
++----------+----------------+----------------+
+3 rows in set (0.02 sec)
+
